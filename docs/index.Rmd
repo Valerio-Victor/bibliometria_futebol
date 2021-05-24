@@ -159,13 +159,26 @@ O presente trabalho foi organizado em uma sequência de três passos, Data
 Import, Data Transformation e Data Modelling and Mapping conforme
 apresentado na Figura 3.1:
 
+
+
+
+
+
 ```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 3.1 – Flow chart showing data collection, modelling and mapping'}
 
 
 
 # Incluindo a Figura do método
-knitr::include_graphics('../imagens/figmetodo1.png')
+knitr::include_graphics('../imagens/figura_metodo.png')
+
+
+
 ```
+
+
+
+
+
 
 A etapa de importação de dados consiste em gerar arquivos nas bases de
 dados cientifícos Scopus e Web of Science com metadados informações de
@@ -554,9 +567,18 @@ Countries <- Countries[1:10,]
 
 colnames(Countries) <- c('Countries','Documents')
 
-knitr::kable(Countries)
+knitr::kable(Countries,
+             
+             escape = FALSE,
+    
+             format = 'html',
+             
+             align = c('c', 'l', 'l')) 
+
 
 ```
+
+
 
 ```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.10 – Countries Collaboration'}
 
@@ -580,12 +602,13 @@ CountriesCo$Value <- as.numeric(CountriesCo$Value)
 CountriesCo <- CountriesCo %>% 
   
   filter(Collaboration!="SCP") %>% 
-  mutate(countries=fct_reorder(Countries,Ratio))
+  
+  mutate(Countries = fct_reorder(Countries, Ratio))
 
 
 
 
-ggplot(CountriesCo, mapping = aes(y = Countries, x = reorder(desc(Ratio)))) +
+ggplot(CountriesCo, mapping = aes(y = Countries, x = Ratio)) +
   geom_col() + 
   ylab('Ratio of Collaboration') 
 
