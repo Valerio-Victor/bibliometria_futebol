@@ -142,27 +142,81 @@ LCdata <- bibliometrix::localCitations(M, fast.search = FALSE, sep = ';')
 histResults <- bibliometrix::histNetwork(M, min.citations = 10, sep = ";")
 ```
 
-# Introduction
+# 1 INTRODUCTION 
 
-# Capítulo teste
+</br>
 
-## capitulo teste 1.1
+- **Relevância do futebol em relação aos demais esportes do mundo**; 
 
-este é um capitulo teste
-não foi dado 2 enters
+</br>
 
-foi dado 1 enter
+- **Alto volume de dinheiro**;
 
-# Methodology
+</br>
+
+- **Tendência de uma gerência profissional, denominado de clube empresa**;
+
+</br>
+
+- **Problemas financeiros e assimetria de resultados**;
+
+</br>
+
+- **Objetivos (com base nisso é importante analisar o estado da arte de análise financiera no futebol)**.
+
+</br>
+
+# 2 LITERATURE REVIEW  
+
+</br>
+
+- **Buscar na base de dados os artigos que já realizaram revisão de literatura e comentar os principais
+resultados de cada um.**
+
+</br>
+
+# 3 METHOD AND DATA
+
+## 3.1 Prisma with Bibliometric Aproach
+
+OBS: sequência de análise da parte bibliométrica:
+
+</br>
+
+- **Autor** 
+
+</br>
+
+- **Artigo** 
+
+</br>
+
+- **Jornal**
+
+</br>
+
+- **Instituições**
+
+</br>
+
+- **Países** 
+
+</br>
+
+- **Tema**
+
+
+
+## 3.3 Data
+
+
+</br>
 
 O presente trabalho foi organizado em uma sequência de três passos, Data
 Import, Data Transformation e Data Modelling and Mapping conforme
 apresentado na Figura 3.1:
 
-
-
-
-
+</br>
 
 ```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 3.1 – Flow chart showing data collection, modelling and mapping'}
 
