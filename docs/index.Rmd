@@ -12,7 +12,6 @@ output:
 ```{r , results = 'hide', echo = F, warning = F, message = F, error = F}
 
 
-
 library(magrittr)
 
 
@@ -22,124 +21,80 @@ library(bibliometrix)
 library(tidyverse)
 
 
-
 # Importação dos dados da base Web Of Science:
 dados_wos <- bibliometrix::convert2df(file = list.files(path = '../dados/arquivos_wos_12_04_21', full.names = TRUE),
-                              
-                              dbsource = 'wos',
-                              
-                              format = 'bibtex') %>% 
+                                      dbsource = 'wos',
+                                      format = 'bibtex') %>% 
 
+  
   dplyr::filter(DT == 'ARTICLE',
-                
                 PY <= 2020,
-                
                 LA == 'ENGLISH',
-                
                 !stringr::str_detect(ID,'RUGBY'),
-                
                 !stringr::str_detect(ID,'MEDICINE'),
-                
                 !stringr::str_detect(ID,'CONCUSSION'),
-                
                 !stringr::str_detect(ID,'EPIDEMIOLOGY'),
-                
                 !stringr::str_detect(ID,'INJURY'),
-                
                 !stringr::str_detect(ID,'GPS'),
-                
                 !stringr::str_detect(ID,'KNEE'),
-                
                 !stringr::str_detect(DE,'RUGBY'),
-                
                 !stringr::str_detect(DE,'CONCUSSION'),
-                
                 !stringr::str_detect(DE,'EPIDEMIOLOGY'),
-                
                 !stringr::str_detect(DE,'INJURY'),
-                
                 !stringr::str_detect(DE,'GPS'),
-                
                 !stringr::str_detect(DE,'KNEE'),
-                
                 !stringr::str_detect(DE,'MEDICINE'))
                 
                
-                    
-              
-
 # Importação dos dados da base scopus:
 dados_scopus <- bibliometrix::convert2df(file = list.files(path = '../dados/arquivos_scopus_12_04_21', full.names = TRUE),
-                              
-                              dbsource = 'scopus',
-                              
-                              format = 'bibtex') %>% 
+                                         dbsource = 'scopus',
+                                         format = 'bibtex') %>% 
 
   dplyr::filter(DT == 'ARTICLE',
-                
                 PY <= 2020,
-                
                 LA == 'ENGLISH',
-                
-                 !stringr::str_detect(ID,'RUGBY'),
-                
+                !stringr::str_detect(ID,'RUGBY'),
                 !stringr::str_detect(ID,'MEDICINE'),
-                
                 !stringr::str_detect(ID,'CONCUSSION'),
-                
                 !stringr::str_detect(ID,'EPIDEMIOLOGY'),
-                
                 !stringr::str_detect(ID,'INJURY'),
-                
                 !stringr::str_detect(ID,'GPS'),
-                
                 !stringr::str_detect(ID,'KNEE'),
-                
                 !stringr::str_detect(DE,'RUGBY'),
-                
                 !stringr::str_detect(DE,'CONCUSSION'),
-                
                 !stringr::str_detect(DE,'EPIDEMIOLOGY'),
-                
                 !stringr::str_detect(DE,'INJURY'),
-                
                 !stringr::str_detect(DE,'GPS'),
-                
                 !stringr::str_detect(DE,'KNEE'),
-                
                 !stringr::str_detect(DE,'MEDICINE'))
-                
-                # ID != 'MEDICINE',
-                # 
-                # JI != 'MEDICINE',
-                # 
-                # SO != 'MEDICINE')
-            
 
+
+dados_scopus$ID <- stringr::str_replace_all(dados_scopus$ID,'SPORTS','SPORT')
+dados_scopus$ID <- stringr::str_replace_all(dados_scopus$ID,'HUMANS','HUMAN')
+
+
+dados_wos$ID <- stringr::str_replace_all(dados_wos$ID,'SPORTS','SPORT')
+dados_wos$ID <- stringr::str_replace_all(dados_wos$ID,'HUMANS','HUMAN')
+            
 
 # Juntando os resultados das suas bases e removendo os documentos duplicados:
 M <- bibliometrix::mergeDbSources(dados_wos, dados_scopus, remove.duplicated = TRUE) 
-
-
-
-
-
 
 
 # Calculando a base dos indicadores bibliométricos:
 results <- bibliometrix::biblioAnalysis(M)
 
 
-
 sumario <- summary(results, k = 10, pause = F)
-
 
 
 LCdata <- bibliometrix::localCitations(M, fast.search = FALSE, sep = ';')
 
 
-
 histResults <- bibliometrix::histNetwork(M, min.citations = 10, sep = ";")
+
+
 ```
 
 # 1 INTRODUCTION 
@@ -221,10 +176,8 @@ apresentado na Figura 3.1:
 ```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 3.1 – Flow chart showing data collection, modelling and mapping'}
 
 
-
 # Incluindo a Figura do método
 knitr::include_graphics('../imagens/figura_metodo.png')
-
 
 
 ```
@@ -267,21 +220,13 @@ a respeito da coleção de artigos é apresentada na Tabela 1.1, abaixo:
 
 
 main <- tibble::as_tibble(sumario[["MainInformationDF"]]) %>% 
-  
   dplyr::filter(!Description %in% c('MAIN INFORMATION ABOUT DATA',
-                                    
                                     'DOCUMENT TYPES',
-                                    
                                     'article',
-                                    
                                     'DOCUMENT CONTENTS',
-                                    
                                     'AUTHORS',
-                                    
                                     'Author Appearances',
-                                    
                                     'AUTHORS COLLABORATION',
-                                    
                                     'Co-Authors per Documents'))
 
 
@@ -290,9 +235,52 @@ knitr::kable(main)
 
 # Results
 
-## Overview
+## Themes
 
-## Conceptual Structure Analysis
+
+```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.1 – Word growth'}
+
+
+worddynamics <- KeywordGrowth(M, 
+                              Tag = 'ID', 
+                              sep = ";", 
+                              top = 10, 
+                              cdf = TRUE)
+
+
+colnames(worddynamics) <- stringr::str_to_lower(colnames(worddynamics))
+
+
+worddynamics %>% 
+  pivot_longer(!(year), names_to = 'Words', values_to = 'Ndy') %>% 
+  ggplot(mapping = aes(x = year, y = Ndy, color = Words)) + 
+  labs(color = '') +
+  geom_line(size = 0.5) +
+  geom_point(size = 1.5) +
+  ylab('Annual Occurrences') +
+  theme(legend.position = 'bottom')
+
+
+```
+
+
+
+```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.2 – Thematic Map'}
+
+
+Map <- thematicMap(M,
+                   field = 'ID', 
+                   n = 250, 
+                   minfreq = 5,
+                   stemming = FALSE, 
+                   size = 0.5,
+                   n.labels=3, repel = TRUE) 
+
+
+plot(Map$map)
+
+
+```
 
 Como fazer a análise: • Os temas no quadrante superior direito são bem
 desenvolvidos e importantes para a estruturação de um campo de pesquisa.
@@ -316,67 +304,21 @@ desaparecendo.
 de pesquisa, mas não são desenvolvidos. Portanto, esse quadrante agrupa
 temas transversais e gerais, básicos.
 
-```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.3 – Thematic Map'}
-
-
-Map=thematicMap(M, field = 'ID', n = 250, minfreq = 5,
-  stemming = FALSE, size = 0.5, n.labels=3, repel = TRUE) 
-
-
-plot(Map$map)
-
-
-```
-
-dasdasd
-
-```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.4 – Word growth'}
-
-
-worddynamics <- KeywordGrowth(M, Tag = 'ID', sep = ";", top = 10, cdf = TRUE)
-
-worddynamics %>% 
-  
-  pivot_longer(!(Year), names_to = 'Words', values_to = 'Ndy') %>% 
-  
-  ggplot(worddynamics, mapping = aes(x = Year, y = Ndy, color = Words)) + 
-  
-  geom_line() +
-  
-  geom_point() +
-  
-  ylab('Annual Occurrences')
-
-
-```
 
 ## Authors Analysis
 
 Em primeiro lugar, para se ter uma visão geral da produtividades dos
 autores neste campo de estudo testou-se o ajuste a lei de lotka.
 
-```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.5 – Scientific Productivity'}
+```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.3 – Scientific Productivity'}
 
 L <- lotka(results)
 
-# Beta coefficient estimate
-#L$Beta
-# Constant
-#L$C
-# Goodness of fit
-#L$R2
-# P-value of K-S two sample test
-#L$p.value
-
-Lobserved <- L[["AuthorProd"]]
-
-Lobserved <- as_tibble(Lobserved)
+Lobserved <- as_tibble(L[["AuthorProd"]])
 
 colnames(Lobserved) <- c('Articles', 'Authors', 'Observed')
 
-Theoretical <- 10^(log10(L$C)-2*log10(L$AuthorProd[,1]))
-
-Theoretical <- as_tibble(Theoretical)
+Theoretical <- as_tibble(10^(log10(L$C)-2*log10(L$AuthorProd[,1])))
 
 colnames(Theoretical) <- c('Theoretical')
 
@@ -393,10 +335,22 @@ lotkatest <- lotkatest %>%
          value = 'Value')
 
 ggplot(lotkatest, mapping = aes(x = Articles, y = Value, color = Type)) + 
-  geom_line() + 
-  geom_point() + 
+  geom_line(size = 0.5) +
+  geom_point(size = 1.5) +
+  labs(color = '') + 
   ylab('Freq. of Authors') + 
-  xlab('Articles')
+  xlab('Articles') +
+  theme(legend.position = 'bottom')
+
+
+# Beta coefficient estimate
+#L$Beta
+# Constant
+#L$C
+# Goodness of fit
+#L$R2
+# P-value of K-S two sample test
+#L$p.value
 
 
 ```
@@ -411,45 +365,42 @@ autores mais produtivos a partir dos indicadores...
 ```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Table 4.1 – Authors Impact'}
 
 LCauthor <- as_tibble(LCdata[['Authors']])
-
 colnames(LCauthor) <- c('Authors','Local Citations') 
-
 authors <- gsub(","," ",names(results$Authors)[1:10])
 
-indices <- Hindex(M, field = "author", elements=authors, sep = ";", years = 50)
 
+indices <- Hindex(M, 
+                  field = "author", 
+                  elements = authors, 
+                  sep = ";", 
+                  years = 50)
 indices <- as_tibble(indices[["H"]])
-
 colnames(indices) <- c('Authors',
-                       'H_Index',
+                       'H-Index',
                        'G_Index',
                        'M_Index',
                        '1',
                        'Documents',
                        '2')
-
 indices <- indices %>% 
   select(Authors,
-         H_Index,
-         G_Index,
-         M_Index,
+         `H-Index`,
          Documents)
 
+
 AuthorsFrac <- as_tibble(results[["AuthorsFrac"]])
-
-colnames(AuthorsFrac) <- c('Authors','Documents_fractionalized') 
-
+colnames(AuthorsFrac) <- c('Authors','Documents Fractionalized') 
 tabauthors <- full_join(indices, AuthorsFrac, 'Authors')
-
 tabauthors <- full_join(tabauthors, LCauthor, 'Authors')
-
 tabauthors <- na.omit(tabauthors)
+tabauthors$`Documents Fractionalized` <- round(as.numeric(tabauthors$`Documents Fractionalized`),2)
+tabauthors$Authors <- stringr::str_to_title(tabauthors$Authors)
+tabauthors <- tabauthors %>% 
+  arrange(desc(`H-Index`))
 
-tabauthors$M_Index <- round(as.numeric(tabauthors$M_Index),2)
 
-tabauthors$Documents_fractionalized <- round(as.numeric(tabauthors$Documents_fractionalized),2)
+knitr::kable(tabauthors, align = c('c','c','c','c','c'))
 
-knitr::kable(tabauthors)
 
 ```
 
