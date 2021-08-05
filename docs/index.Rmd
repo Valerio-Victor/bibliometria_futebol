@@ -231,6 +231,8 @@ main <- tibble::as_tibble(sumario[["MainInformationDF"]]) %>%
 
 
 knitr::kable(main)
+
+
 ```
 
 # Results
@@ -307,6 +309,8 @@ temas transversais e gerais, básicos.
 
 ## Authors Analysis
 
+ANÁLISE DE PRODUTIVIDADE
+
 Em primeiro lugar, para se ter uma visão geral da produtividades dos
 autores neste campo de estudo testou-se o ajuste a lei de lotka.
 
@@ -362,6 +366,8 @@ significativa entre as distribuições de Lotka observada e teórica.
 Já na Tabela a seguir, pode-se observar o impacto para a literatura dos
 autores mais produtivos a partir dos indicadores...
 
+ANÁLISE DE IMPACTO
+
 ```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Table 4.1 – Authors Impact'}
 
 LCauthor <- as_tibble(LCdata[['Authors']])
@@ -406,24 +412,43 @@ knitr::kable(tabauthors, align = c('c','c','c','c','c'))
 
 Realizar avaliações gerais.
 
-```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.6 – Authors Collaboration'}
+ANÁLISE DE COLABORAÇÃO
+
+```{r , results = 'hide', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.6 – Authors Collaboration'}
 
 
-NetMatrix <- biblioNetwork(M, analysis = "collaboration",  network = "authors", sep = ";")
+collaboration_authors <- biblioNetwork(M, 
+                                      analysis = 'coupling', 
+                                      network = 'authors',
+                                      sep = ';')
 
-net=networkPlot(NetMatrix,  normalize = "salton", weighted = NULL, n = 100, 
-                Title = '', 
-                type = 'fruchterman', 
-                size = 10,
-                size.cex = T,
-                remove.multiple = T,
-                labelsize = 1,
-                label.n = 10,
-                label.cex = F)
+
+networkPlot(collaboration_authors,
+            Title = '',              # Não adicionar título
+            n = 20,                  # Quantidade de nós na rede
+            size = 15,               # Tamanho base dos nós
+            size.cex = TRUE,         # Tamanho maior proporcional a grau
+            type = 'auto',           # Layout da rede
+            label.color = TRUE,      # Não está funcionando!???!
+            remove.multiple = FALSE, # Mantém as diversas ligações
+            edges.min = 5,           # Número mínimo de licações que devem aparecer
+            edgesize = 5,            # Tamanho das ligações
+            label.cex = TRUE,        # Nome proporcional ao grau
+            curved = TRUE,           # Ligações curvas
+            alpha = 0.75)            # Sombreamento das cores
+
+
 
 ```
 
 sadasdasd
+
+
+
+
+
+
+
 
 ## Documents Analysis
 
