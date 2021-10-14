@@ -294,8 +294,46 @@ de colaboração de 2.88 autores por artigos.
 
 ## Themes
 
+Na Figura x abaixo é apresentado o mapa temático, conforme procedimento 
+organizado por [cobbo], estruturado com base nas keywords empregadas pelos autores 
+em cada um dos artigos selecionados, ao mesmo passo, na Figura 4.2 são apresentadas 
+as somas culmulativas das keywords com maior tendência atual de crescimento. 
 
-```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.1 – Word growth'}
+Cumpre ressaltar que ambas as análises, quando associadas, possuem o potencial de 
+identificar os temas mais desenvolvidos, trabalhados de maneira conjunta com maior
+maior frequência e, portanto, que representam forte tendência de aplicação em um 
+determinado campo de análise.
+
+
+```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.1 – Thematic Map'}
+
+
+Map <- thematicMap(M,
+                   field = 'ID', 
+                   n = 250, 
+                   minfreq = 5,
+                   stemming = FALSE, 
+                   size = 0.5,
+                   n.labels=3, repel = TRUE) 
+
+
+plot(Map$map)
+
+
+```
+
+
+Pode-se observar a partir da análise do mapa temático da Figura 4.1 que, atualmente,
+o cluster de temas relacionados à impactos de modelos de negócios nos clubes de 
+futebol são os mais desenvolvidos, ao medirmos pelas métricas de densidade e 
+centralidade. Não obstante, ao observar a tendência acelerada de crescimento dos 
+temas relacionados à performance, Figura 4.2, e a posição do cluster de temas 
+que busca relacionar aspectos financeiros dos clubes à performance de atletas, 
+pode-se afirmar que este tende a desempenhar um importante tema de pesquisa no 
+futuro, apoiando o desenvolvimento do campo de pesquisa.
+
+
+```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.2 – Word growth'}
 
 
 worddynamics <- KeywordGrowth(M, 
@@ -321,46 +359,12 @@ worddynamics %>%
 ```
 
 
-
-```{r , results = 'asis', echo = F, warning = F, message = F, error = F, fig.align ='center', out.width='100%', fig.cap = 'Figure 4.2 – Thematic Map'}
-
-
-Map <- thematicMap(M,
-                   field = 'ID', 
-                   n = 250, 
-                   minfreq = 5,
-                   stemming = FALSE, 
-                   size = 0.5,
-                   n.labels=3, repel = TRUE) 
-
-
-plot(Map$map)
-
-
-```
-
-Como fazer a análise: • Os temas no quadrante superior direito são bem
-desenvolvidos e importantes para a estruturação de um campo de pesquisa.
-Eles são conhecidos como temas motores da especialidade, pois apresentam
-forte centralidade e alta densidade. A colocação de temas nesse
-quadrante implica que eles estejam relacionados externamente a conceitos
-aplicáveis a outros temas que estão conceitualmente intimamente
-relacionados.
-
-• Os temas no quadrante superior esquerdo desenvolveram laços internos
-bem desenvolvidos, mas laços externos sem importância e, portanto, são
-de importância apenas marginal para o campo. Esses temas são muito
-especializados e de caráter periférico.
-
-• Os temas no quadrante inferior esquerdo são pouco desenvolvidos e
-marginais. Os temas desse quadrante têm baixa densidade e baixa
-centralidade, representando principalmente temas emergentes ou
-desaparecendo.
-
-• Os temas no quadrante inferior direito são importantes para um campo
-de pesquisa, mas não são desenvolvidos. Portanto, esse quadrante agrupa
-temas transversais e gerais, básicos.
-
+De outro lado, em menor ritmo de crescimento quando analisadas as tendências de
+crescimento da Figura 4.2, e com baixos níveis de centralidade e, em alguns casos, baixos níveis 
+de densidade quando analisado o mapa temático, os clusters de temas relacionados 
+à análises do mercado dos clubes de futebol se colocam como temas transversais, 
+portanto, mais nichados e generalistas. Pode-se inferir assim, certa tendência de 
+declínio de desenvolvimentos teórico ou de aplicações com este foco.
 
 ## Authors Analysis
 
