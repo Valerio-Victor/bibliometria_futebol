@@ -4,7 +4,7 @@ subtitle: 'Pesquisa em Finanças'
 author: '_Autores:_ Prof. Marcelo Fonseca, Wilson Nakamura, Giancarlo, José Marcos, Victor Valerio'
 date: '_Última atualização:_ data'
 output:
-  word_document
+  html_document
 ---
 
 <div style="text-align: justify">
@@ -294,7 +294,7 @@ de colaboração de 2.88 autores por artigos.
 
 ## Themes
 
-Na Figura x abaixo é apresentado o mapa temático, conforme procedimento 
+Na Figura 4.1 é apresentado o mapa temático, conforme procedimento 
 organizado por [cobbo], estruturado com base nas keywords empregadas pelos autores 
 em cada um dos artigos selecionados, ao mesmo passo, na Figura 4.2 são apresentadas 
 as somas culmulativas das keywords com maior tendência atual de crescimento. 
